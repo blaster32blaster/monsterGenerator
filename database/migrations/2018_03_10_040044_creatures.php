@@ -16,6 +16,7 @@ class Creatures extends Migration
         Schema::create('creatures', function (Blueprint $table) {
             $table->increments('id');
             $table->string('locomotion');
+            $table->integer('mass');
             $table->timestamps();
         });
     }

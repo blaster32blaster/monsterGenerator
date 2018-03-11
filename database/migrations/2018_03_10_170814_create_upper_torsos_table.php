@@ -15,8 +15,16 @@ class CreateUpperTorsosTable extends Migration
     {
         Schema::create('upper_torsos', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('creature_id')->unsigned();
+            $table->string('attachment');
+            $table->integer('mass');
             $table->timestamps();
         });
+
+        Schema::table('torsos', function($table) {
+            $table->foreign('creature_id')->references('id')->on('creatures');
+        });
+
     }
 
     /**

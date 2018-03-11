@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Creature;
 use App\Torso;
+use App\UpperTorso;
 use Illuminate\Http\Request;
 
 class CreatureController extends Controller
@@ -42,13 +43,15 @@ class CreatureController extends Controller
     public function store(Request $request)
     {
         $this->creature = new Creature();
-        $locomotion = 'bipedal';
-        $this->creature->locomotion = $locomotion;
+        $this->creature->locomotion = $this->creature->getRandomLocomotion();
+        $this->creature->mass = $this->creature->getRandomMass();
         $this->creature->save();
         $this->creature->torso = $this->createCreatureTorso();
+        $this->creature->upperTorso = $this->createCreatureUpperTorso();
 //        @todo : create methods for adding lower / upper torso
 //        @todo : create methods for top/bottom front/back
 //        @todo : determine the method by which the different values will impact attributes or add modifiers
+//        @todo : determine creature description based upon attributes
         return response($this->creature, 200);
     }
 
@@ -59,9 +62,12 @@ class CreatureController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public function show($id)
     {
-        return response(Creature::find($request->id));
+        $this->creature = Creature::find($id);
+        $this->creature->torso = $this->creature->torso()->get();
+        $this->creature->upperTorso = $this->creature->upperTorso()->get();
+        return response($this->creature, 200);
     }
 
     /**
@@ -108,7 +114,7 @@ class CreatureController extends Controller
     {
         $torso = new Torso();
         $torso->color = $torso->getRandomColor();
-        $torso->covering = $torso->getRandomCovering();
+        $torso->covering = json_encode($torso->getCoveringValues());
         $torso->pattern = $torso->getRandomPattern();
         $this->creature->torso()->save($torso);
         return $this->creature->torso()->get();
@@ -119,7 +125,12 @@ class CreatureController extends Controller
      */
     private function createCreatureUpperTorso()
     {
-
+        $upperTorso = new UpperTorso();
+        $upperTorso->attachment = $upperTorso->getAttachment($this->creature);
+        $upperTorso->mass = $upperTorso->getRandomMass();
+//        dd($upperTorso);
+        $this->creature->upperTorso()->save($upperTorso);
+        return $this->creature->upperTorso()->get();
     }
 
     /**

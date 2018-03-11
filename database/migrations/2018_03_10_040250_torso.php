@@ -17,7 +17,7 @@ class Torso extends Migration
             $table->increments('id');
             $table->integer('creature_id')->unsigned();
             $table->string('color');
-            $table->string('covering');
+            $table->json('covering');
             $table->string('pattern');
             $table->timestamps();
         });
