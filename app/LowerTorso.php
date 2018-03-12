@@ -5,9 +5,8 @@ namespace App;
 use App\Traits\CoveringTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class UpperTorso extends Model
+class LowerTorso extends Model
 {
-
     use CoveringTrait;
 
     protected $fillable = [
@@ -15,11 +14,11 @@ class UpperTorso extends Model
     ];
 
     /**
-     * The attachments available for the upper torso
+     * The attachments available for the lower torso
      *
      * @var array
      */
-    protected $attachments = ["arms", "legs", "wings", "tentacles", "none"];
+    protected $attachments = ["legs", "wings", "tentacles", "none"];
 
     /**
      * The creature model
@@ -36,7 +35,7 @@ class UpperTorso extends Model
     protected $attachment;
 
     /**
-     * get the creature associated with this upper torso
+     * get the creature associated with this lower torso
      */
     public function creature()
     {
@@ -44,7 +43,7 @@ class UpperTorso extends Model
     }
 
     /**
-     * get the creatures upper torso attachment
+     * get the creatures lower torso attachment
      *
      * @param $creature
      */
@@ -56,7 +55,7 @@ class UpperTorso extends Model
     }
 
     /**
-     * get a random attachment for the upper torso
+     * get a random attachment for the lower torso
      *
      */
     public function getRandomAttachment()
@@ -74,7 +73,7 @@ class UpperTorso extends Model
     }
 
     /**
-     * get the mass for the upper torso attachments
+     * get the mass for the lower torso attachments
      *
      * @return int
      */
@@ -97,7 +96,7 @@ class UpperTorso extends Model
 
     private function checkLocomotion()
     {
-        $disallowed = config('locomotionRules.not_allowed_upper_torso_attachments.'. $this->creature->locomotion);
+        $disallowed = config('locomotionRules.not_allowed_lower_torso_attachments.'. $this->creature->locomotion);
         if (in_array($this->attachment, $disallowed, true)) {
             return false;
         }
